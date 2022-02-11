@@ -1,6 +1,6 @@
 .. comment: -*- mode:rst; coding:utf-8; electric-indent-mode:nil; tab-always-indent:t -*-
 
-   
+
 Introduction
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -63,17 +63,17 @@ examples. The supporting code implements:
     2. A small, but efficient, queue implementation, from "ANSI Common Lisp"
        by Paul Graham. The interface calls are:
 
-       .. code::
-          
+       .. code:: lisp
+
           (make-queue)
           (enqueue obj q)
           (dequeue q)
           (empty-queue q)
 
-    3. \:iolib.examples currently depends upon IOLib alone and uses 
+    3. \:iolib.examples currently depends upon IOLib alone and uses
        packages \:common-lisp, \:iolib, and \:bordeaux-threads.
 
-       
+
 Running the Examples
 ===============================================================================
 
@@ -88,8 +88,8 @@ the client to \*host\* and \*port\*, get the time, and exit.
 
 First we'll start up a server:
 
-.. code::
-   
+.. code:: lisp
+
    Linux black > sbcl
    This is SBCL 2.1.1.debian, an implementation of ANSI Common Lisp.
    More information about SBCL is available at <http://www.sbcl.org/>.
@@ -115,8 +115,8 @@ First we'll start up a server:
 
 Now we'll start up the client which connected to the above server:
 
-.. code::
-   
+.. code:: lisp
+
    Linux black > sbcl
    This is SBCL 2.1.1.debian, an implementation of ANSI Common Lisp.
    More information about SBCL is available at <http://www.sbcl.org/>.
@@ -138,8 +138,8 @@ Now we'll start up the client which connected to the above server:
 In each client example, one can specify which host or port to which it should
 connect:
 
-.. code::
-   
+.. code:: lisp
+
    * (run-ex1-client :host "localhost" :port 9999)
    Connected to server 127.0.0.1:9999 via my local connection at 127.0.0.1:34798!
    2/27/2010 13:53:7

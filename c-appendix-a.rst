@@ -43,7 +43,7 @@ Figure 6.13, page 162
   reaches end-of-file as to prevent in flight data from being destroyed
   on the way to the server.
 
-  
+
 The servers
 -------------------------------------------------------------------------------
 
@@ -84,4 +84,3 @@ Figure 15.3, 15.4, 15.5 page 400-403
 - ex8-server, ex8-buffer: nonblocking I/O, event-dispatch, send-to, receive-from
 
 .. comment: end of file
-   

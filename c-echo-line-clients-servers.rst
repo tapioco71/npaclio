@@ -1,6 +1,6 @@
 .. comment: -*- mode:rst; coding:utf-8; electric-indent-mode:nil; tab-always-indent:t -*-
 
-   
+
 Echo Line Clients and Servers
 ===============================================================================
 
@@ -19,5 +19,5 @@ to some form of blocking I/O in our clients because they interact with a human.
 We will explore true non-blocking I/O in the ex8-server example since that
 server only has to converse with connected clients.
 
+
 .. comment: end of file
-   

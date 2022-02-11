@@ -22,7 +22,7 @@ its nonblocking behavior.
 
 0. The special variable used to communicate the client socket to the thread:
 
-   .. code::
+   .. code:: lisp
 
       ;; The special variable used to hold the client socket for the thread
       ;; managing it.
@@ -31,7 +31,7 @@ its nonblocking behavior.
 
 1. The usual prologue to a server:
 
-   .. code::
+   .. code:: lisp
 
       (defun run-ex5-server-helper (port)
         (with-open-socket
@@ -56,7 +56,7 @@ its nonblocking behavior.
 
 2. First half of creating the client threads:
 
-   .. code::
+   .. code:: lisp
 
       ;; keep accepting connections forever, but if this exits for whatever
       ;; reason ensure to destroy any remaining running threads.
@@ -81,7 +81,7 @@ its nonblocking behavior.
 
    We make sure to clean up only the client threads!
 
-   .. code::
+   .. code:: lisp
 
       ;; Clean up form for uw-p.
       ;; Clean up all of the client threads when done.
@@ -111,7 +111,7 @@ its nonblocking behavior.
    numerous conditions the the client could generate while talking to it in
    the function str-ex5-echo.
 
-   .. code::
+   .. code:: lisp
 
       ;; The thread which handles the client connection.
       (defun process-ex5-client-thread ()
@@ -161,7 +161,7 @@ its nonblocking behavior.
    UNWIND-PROTECT cleanup form in step 4 to fire and close the connection to
    the client.
 
-   .. code::
+   .. code:: lisp
 
       ;; The actual function which speaks to the client.
       (defun str-ex5-echo (client who port)
@@ -185,7 +185,7 @@ its nonblocking behavior.
 
 6. The entrance function into this example:
 
-   .. code::
+   .. code:: lisp
 
       ;; This just checks for some error conditions so we can print out a nice
       ;; message about it.
@@ -226,7 +226,7 @@ multiplexer API farther.
 
 0. The variable which holds the multiplexer instance:
 
-   .. code::
+   .. code:: lisp
 
       ;; This variable represents the multiplexer state.
       (defvar *ex6-server-event-base*)
@@ -239,7 +239,7 @@ multiplexer API farther.
    client's socket. This is so that under any conditions of the server exiting
    we can eagerly close any open connections to clients in a cleanup form.
 
-   .. code::
+   .. code:: lisp
 
       ;; This holds any open connections to clients as keys in the table. The values
       ;; is a list containing the host and port of the connection. We use this to
@@ -254,7 +254,7 @@ multiplexer API farther.
    ensure to close the socket at the end of the server's computation or if
    something went wrong.
 
-   .. code::
+   .. code:: lisp
 
       ;; Set up the server and server clients with the multiplexer
       (defun run-ex6-server-helper (port)
@@ -283,7 +283,7 @@ multiplexer API farther.
 3. Register a listener handler on the server socket and start dispatching
    events with the multiplexer:
 
-   .. code::
+   .. code:: lisp
 
       ;; Set up the initial listener handler for any incoming clients
       (set-io-handler *ex6-server-event-base*
@@ -313,7 +313,7 @@ multiplexer API farther.
 
 4. When the server stops handling clients, we close the server socket:
 
-   .. code::
+   .. code:: lisp
 
       ;; Cleanup expression for uw-p.
       ;; Ensure the server socket is closed, regardless of how we left
@@ -329,8 +329,8 @@ multiplexer API farther.
    closure with the socket.  The line echo closure will also contain a
    disconnector function as in previous usages of the multiplexer.
 
-   .. code::
-      
+   .. code:: lisp
+
       ;; When the multiplexer states the server socket is ready for reading
       ;; it means that we have a client ready to accept. So we accept it and
       ;; then register the accepted client socket back into the multiplexer
@@ -368,7 +368,7 @@ multiplexer API farther.
    whole server to block for all clients. This serious defect is remedied with
    non-blocking I/O, which we show in a later example.
 
-   .. code::
+   .. code:: lisp
 
       ;; This function returns a function that reads a line, then
       ;; echoes it right back onto the socket it came from. This is blocking
@@ -414,7 +414,7 @@ multiplexer API farther.
    down the connection destroying any in flight data. After closing the
    socket, we also remove it from our table of open connections.
 
-   .. code::
+   .. code:: lisp
 
       ;; If we decide we need to disconnect ourselves from the client, this will
       ;; remove all the handlers and remove the record of our connection from
@@ -432,7 +432,7 @@ multiplexer API farther.
    This code is the beginning of the UNWIND-PROTECT form which protects the
    server's socket resources.
 
-   .. code::
+   .. code:: lisp
 
       ;; This is the entrance function into this example.
       (defun run-ex6-server (&key (port *port*))
@@ -461,7 +461,7 @@ multiplexer API farther.
    eagerly close every client we find there. After we are done, we close the
    event-base. This ensures every thing is cleaned up properly.
 
-   .. code::
+   .. code:: lisp
 
       ;; Cleanup form for uw-p
       ;; Close all open connections to the clients, if any. We do this
@@ -538,7 +538,7 @@ difference to ex6-server.
    which the client's write handler can get access to the data read by the
    client's read handler.
 
-   .. code::
+   .. code:: lisp
 
       ;; Create the listener closure which accepts the client and registers the
       ;; buffer functions with it.
@@ -584,7 +584,7 @@ difference to ex6-server.
    unregister specific handlers for the client socket, we need to be able to
    selectively remove them without disturbing the others.
 
-   .. code::
+   .. code:: lisp
 
       (defun make-ex7-server-disconnector (socket)
         ;; When this function is called, it can be told which callback to remove, if
@@ -623,7 +623,7 @@ when there is data to write, or room to read more data up to the buffer size.
    we've seen the END-OF-FILE from a client. The line-queue will hold the
    actual data from the client.
 
-   .. code::
+   .. code:: lisp
 
       (defun make-ex7-io-buffer (socket who port disconnector &key (max-bytes 4096))
         (let ((line-queue (make-queue))
@@ -659,7 +659,7 @@ when there is data to write, or room to read more data up to the buffer size.
    whole connection by removing all handlers in the multiplexer for this
    client and ultimately throw away any in-flight data.
 
-   .. code::
+   .. code:: lisp
 
       (labels
         ;; If this function notices that there is data to write, it will
@@ -726,8 +726,8 @@ when there is data to write, or room to read more data up to the buffer size.
    write, it will close the connection to the client and unregister
    everything.
 
-   .. code::
-      
+   .. code:: lisp
+
       ;; This function will notice that if it has written enough bytes to
       ;; bring the bytes-left-to-write under max-bytes, it will re-register
       ;; the reader io handler. If there is no data to write, it will,
@@ -801,7 +801,7 @@ when there is data to write, or room to read more data up to the buffer size.
    single argument, either the keywords \:read-a-line or \:write-a-line, and
    returns a reference to either internal function.
 
-   .. code::
+   .. code:: lisp
 
       ;; This is the actual function returned from make-ex7-io-buffer
       ;; which allows us access to the read/writer in the scope of the
@@ -882,7 +882,7 @@ The ex8-server codes:
 
    Accept and store the client connection.
 
-   .. code::
+   .. code:: lisp
 
       (defun make-ex8-server-listener-handler (socket)
         (lambda (fd event exception)
@@ -904,7 +904,7 @@ The ex8-server codes:
    \:read-some-bytes and \:write-some-bytes. This better represents what the
    io-buffer is actually doing.
 
-   .. code::
+   .. code:: lisp
 
           ;; We make an io-buffer, which takes care of reading from the
           ;; socket and echoing the information it read back onto the
@@ -957,7 +957,7 @@ Now, we'll show the io-buffer specific to ex8-server.
     to the server. The server will push out all data to the client, then close
     socket to the client.
 
-   .. code::
+   .. code:: lisp
 
       (defun make-ex8-io-buffer (socket who port disconnector &key (max-bytes 16384))
         (let ((echo-buf (make-array max-bytes :element-type 'unsigned-byte))
@@ -984,7 +984,7 @@ Now, we'll show the io-buffer specific to ex8-server.
    knowledge that if we have no more data to write we just close the
    connection to the client.
 
-   .. code::
+   .. code:: lisp
 
       (labels
         ;; This is the function responsible for reading bytes from the client.
@@ -1091,7 +1091,7 @@ Now, we'll show the io-buffer specific to ex8-server.
    stream API. We treat it similarly to a HANGUP.
 
 
-   .. code::
+   .. code:: lisp
 
          ;; This is the function responsible for writing bytes to the client.
          (write-some-bytes (fd event exception)
@@ -1168,7 +1168,7 @@ Now, we'll show the io-buffer specific to ex8-server.
    Much like make-ex7-io-buffer, we return one of the internal closures which
    are appropriate for reading or writing by the multiplexer.
 
-   .. code::
+   .. code:: lisp
 
       ;; This is the function returned from make-ex8-io-buffer which
       ;; allows us access to the read/writer in the scope of the

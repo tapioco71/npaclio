@@ -24,7 +24,7 @@ similar in scope to the ex1-client.lisp example.
    is passive. Also here we see that we can ask for the underlying fd of the
    socket with the function SOCKET-OS-FD.
 
-   .. code::
+   .. code:: lisp
 
       (defun run-ex1-server (&key (port *port*))
         ;; Create a passive (server) TCP socket under IPV4 Sockets meant to
@@ -48,7 +48,7 @@ similar in scope to the ex1-client.lisp example.
    TIME_WAIT state it can be reused immediately.  It is recommended that all
    servers use \:reuse-addr on their listening socket.
 
-   .. code::
+   .. code:: lisp
 
       ;; Bind the socket to all interfaces with specified port.
       (bind-address socket
@@ -64,7 +64,7 @@ similar in scope to the ex1-client.lisp example.
    specified that 5 pending connection can be queued up in the kernel before
    being accepted by the process.
 
-   .. code::
+   .. code:: lisp
 
       ;; Convert the sockxet to a listening socket
       (listen-on socket :backlog 5)
@@ -83,8 +83,8 @@ similar in scope to the ex1-client.lisp example.
    also opt to use the function REMOTE-NAME, which returns two values, the ip
    address and port of the remote side of the socket.
 
-   .. code::
-      
+   .. code:: lisp
+
       ;; Block on accepting a connection
       (format t "Waiting to accept a connection...~%")
       (let ((client (accept-connection socket :wait t)))
@@ -103,7 +103,7 @@ similar in scope to the ex1-client.lisp example.
    that every write to a blocking socket be followed up with a call to
    FINISH-OUTPUT.
 
-   .. code::
+   .. code:: lisp
 
       ;; Since we're using a internet TCP stream, we can use format
       ;; with it. However, we should be sure to call finish-output on
@@ -121,7 +121,7 @@ similar in scope to the ex1-client.lisp example.
     We're done writing to the client, so close the connection so the client
     knows it got everything.
 
-    .. code::
+    .. code:: lisp
 
        ;; We're done talking to the client.
        (close client)
@@ -134,7 +134,7 @@ similar in scope to the ex1-client.lisp example.
    this and all other servers we call FINISH-OUTPUT to flush all pending
    message to \*standard-output\*, if any.
 
-   .. code::
+   .. code:: lisp
 
       ;; We're done with the server socket too.
       (close socket)
@@ -180,7 +180,7 @@ handle, in a serial fashion only, multiple clients.
    ensure to tell the accept we'd like to be blocking. If for whatever reason
    we exit the body, it'll clean up the client socket automatically.
 
-   .. code::
+   .. code:: lisp
 
       ;; Keep accepting connections forever.
       (loop
@@ -232,7 +232,7 @@ little bit of restructuring of the codes.
    having WITH-OPEN-SOCKET do the binding and connecting with appropriate
    keyword arguments.
 
-   .. code::
+   .. code:: lisp
 
       (defun run-ex3-server-helper (port)
         (with-open-socket
@@ -275,11 +275,11 @@ little bit of restructuring of the codes.
    structure code to deal with them. In production code where the author might
    not care about these conditions at all, one might simply ignore all the
    signaled conditions that writing to the client might cause.
-   
+
    Of course, the appropriateness of ignoring network boundary conditions is
    best determined by context.
 
-   .. code::
+   .. code:: lisp
 
       ;; keep accepting connections forever.
       (loop
@@ -320,7 +320,7 @@ little bit of restructuring of the codes.
 
 2. End of the helper function, returns T to whomever called it:
 
-   .. code::
+   .. code:: lisp
 
       t))
 
@@ -334,9 +334,9 @@ little bit of restructuring of the codes.
    another one starting up to replace it, that when binding addresses, one
    should supply the keyword argument :reuse-addr with a true value to
    BIND-ADDRESS to allow binding a socket to an address in TIME_WAIT state.
-   
-   .. code::
-      
+
+   .. code:: lisp
+
       ;; This is the main entry point into the example 3 server.
       (defun run-ex3-server (&key (port *port*))
         (handler-case
@@ -376,7 +376,7 @@ important problems are: data races and thread termination. The tutorial tries
 very hard to avoid any data races in the examples and this problem is
 ultimately solvable using Bordeaux-Threads mutexes or condition variables.  Our
 simple examples do not need mutexes as they do not share any data between
-themselves. 
+themselves.
 
 The harder problem is thread termination. Since the tutorial encourages
 experimentation with the clients and servers in a REPL, threads may leak when
@@ -414,7 +414,7 @@ Here is the dissection of ex4-server:
 0. A special variable which will allow the initial thread to pass a client
    socket to a thread handling said client:
 
-   .. code::
+   .. code:: lisp
 
       ;; This variable is the means by which we transmit the client socket from
       ;; the initial thread to the particular thread which will handle that client.
@@ -423,7 +423,7 @@ Here is the dissection of ex4-server:
 
 1. A helper function which begins with the usual recipe for a server:
 
-   .. code::
+   .. code:: lisp
 
       (defun run-ex4-server-helper (port)
         (with-open-socket
@@ -463,7 +463,7 @@ Here is the dissection of ex4-server:
    the client sockets allowing any clients to know the server went away
    immediately.
 
-   .. code::
+   .. code:: lisp
 
       ;; Here we introduce unwind-protect to ensure we properly clean up
       ;; any leftover threads when the server exits for whatever reason.
@@ -518,8 +518,8 @@ Here is the dissection of ex4-server:
    about its possibly undefined value. In our case, this will always be
    defined at runtime in this server.
 
-   .. code::
-           
+   .. code:: lisp
+
       ;;; The thread which handles the client connection.
       (defun process-ex4-client-thread ()
         ;; This variable is set outside of the context of this thread.
@@ -536,7 +536,7 @@ Here is the dissection of ex4-server:
    just informs us which of the common IOLib conditions may have been signaled
    while writing the time to the client.
 
-   .. code::
+   .. code:: lisp
 
       ;; We ensure the client socket is always closed!
       (unwind-protect
@@ -578,8 +578,8 @@ Here is the dissection of ex4-server:
 
     Such incorrect code would look like:
 
-    .. code::
-       
+    .. code:: lisp
+
        ;; This code is incorrect!
        (defun process-ex4-client-thread ()
          (declare (ignorable *ex4-tls-client*))
@@ -595,8 +595,8 @@ Here is the dissection of ex4-server:
    Like earlier servers, we call the helper function and catch what happens if
    \:reuse-addr wasn't true in the BIND-ADDRESS function call.
 
-   .. code::
-      
+   .. code:: lisp
+
       ;; The entry point into this example.
       (defun run-ex4-server (&key (port *port*))
         (handler-case
@@ -621,4 +621,3 @@ the care one must have in order to ensure that data access and control flow is
 kept consistent.
 
 .. comment: end of file
-   

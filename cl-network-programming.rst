@@ -79,12 +79,12 @@ Where do I get IOLib?
 
  Please use the repository located in the Live Sources section for the most up
  to date version of IOLib.
- 
+
 .. raw:: pdf
 
     PageBreak
 
-    
+
 .. include:: c-introduction.rst
 
 .. raw:: pdf
@@ -165,12 +165,12 @@ IPV4 TCP Client/Server Blocking and nonblocking I/O
 
 .. include:: c-appendix-a.rst
 
-.. comment: end-chapters   
- 
+.. comment: end-chapters
+
 .. raw:: pdf
 
     PageBreak
-           
+
 
 Bibliography
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

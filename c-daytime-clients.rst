@@ -1,6 +1,6 @@
 .. comment: -*- mode:rst; coding:utf-8; electric-indent-mode:nil; tab-always-indent:t -*-
 
-   
+
 Daytime Clients
 ===============================================================================
 
@@ -22,7 +22,7 @@ The steps this program performs are:
 
 0. The ex1-client.lisp entrance call:
 
-   .. code::
+   .. code:: lisp
 
       (defun run-ex1-client (&key (host *host*) (port *port*))
 
@@ -43,8 +43,8 @@ The steps this program performs are:
    to connect to a server and passive sockets are used for a server's
    listening socket.
 
-   .. code::
-           
+   .. code:: lisp
+
       ;; Create a internet TCP socket under IPV4
       (let ((socket (make-socket :connect :active
                                  :address-family :internet
@@ -53,22 +53,22 @@ The steps this program performs are:
                                  :ipv6 nil)))
 
 
-2. Specify the Server's IP address and port and establish a connection 
+2. Specify the Server's IP address and port and establish a connection
    with the server:
 
    This bit of code contains many calls into IOLib and we shall examine each
-   of them. 
+   of them.
 
    The function LOOKUP-HOSTNAME takes as a string the DNS name
    for a machine and returns 4 values:
-    
+
    A. an address
-       
+
    B. a list of additional addresses(if existent)
-       
+
    C. the canonical name of the host
-       
-   D. an alist of all the host's names with their respective addresses 
+
+   D. an alist of all the host's names with their respective addresses
 
    We use only the first return value, the address component, to pass to the
    function CONNECT.
@@ -88,7 +88,7 @@ The steps this program performs are:
    where the first value is the equivalent of \*-host and the second value is
    the equivalent of \*-port.
 
-   .. code::
+   .. code:: lisp
 
       ;; do a blocking connect to the daytime server on the port.
       (connect socket (lookup-hostname host) :port port :wait t)
@@ -106,8 +106,8 @@ The steps this program performs are:
    read, the line is emitted to \*standard-output\* via the function call
    FORMAT.
 
-   .. code::
-           
+   .. code:: lisp
+
       ;; read the one line of information I need from the daytime
       ;; server.  I can use read-line here because this is a TCP socket.
       (let ((line (read-line socket)))
@@ -119,8 +119,8 @@ The steps this program performs are:
    We close the socket with the standard function CLOSE and return true so the
    return value of this example is t.
 
-   .. code::
-           
+   .. code:: lisp
+
       ;; all done
       (close socket)
       t))
@@ -146,10 +146,10 @@ The introduced macro WITH-OPEN-SOCKET calls MAKE-SOCKET with the arguments in
 question and binds the socket to the variable 'socket'. When this form returns,
 it will automatically close the socket.
 
-This shortens the program so much, that the example can be included in its 
+This shortens the program so much, that the example can be included in its
 entirety:
 
-.. code::
+.. code:: lisp
 
    (defun run-ex2-client (&key (host *host*) (port *port*))
 
@@ -177,17 +177,17 @@ entirety:
        (let ((line (read-line socket)))
          (format t "~A" line)
          t)))
-   
+
 
 This shorthand can go even further, if we add this to the WITH-OPEN-SOCKET
 flags
 
-.. code::
-   
+.. code:: lisp
+
     :remote-host (lookup-hostname host)
     :remote-port port
 
-    
+
 then the underlying MAKE-SOCKET call will in fact connect the socket directly
 to the server before it is available for the body of the macro allowing us to
 remove the connect call entirely! In the early examples, however, we don't
@@ -231,8 +231,8 @@ oriented blocking I/O) proceeds thusly:
    programs become more and more complex, however, it becomes more obvious at
    what abstraction level to handle signaled conditions.
 
-   .. code::
-           
+   .. code:: lisp
+
       (defun run-ex3-client-helper (host port)
 
         ;; Create a internet TCP socket under IPV4
@@ -269,7 +269,7 @@ oriented blocking I/O) proceeds thusly:
    Notice we catch the possible SOCKET-CONNECTION-REFUSED-ERROR from the
    connect inside of the function run-ex3-client-helper.
 
-   .. code::
+   .. code:: lisp
 
       ;; The main entry point into ex3-client
       (defun run-ex3-client (&key (host *host*) (port *port*))
@@ -306,4 +306,3 @@ SOCKET-CONNECTION-REFUSED-ERROR:
     connection.
 
 .. comment: end of file
-   

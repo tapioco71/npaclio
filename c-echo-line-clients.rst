@@ -1,6 +1,6 @@
 .. comment: -*- mode:rst; coding:utf-8; electric-indent-mode:nil; tab-always-indent:t -*-
 
-   
+
 Echo Clients
 ===============================================================================
 
@@ -35,7 +35,7 @@ while talking to the server:
    condition happened since after that the socket gets closed via
    WITH-OPEN-SOCKET.
 
-   .. code::
+   .. code:: lisp
 
       (defun run-ex4-client-helper (host port)
 
@@ -84,7 +84,7 @@ while talking to the server:
    must hit  in order to drive the I/O loop enough to get the signaled
    condition.
 
-   .. code::
+   .. code:: lisp
 
       ;; read a line from stdin, write it to the server, read the response, write
       ;; it to stdout. If we read 'quit' then echo it to the server which will
@@ -103,7 +103,7 @@ while talking to the server:
    We handle the usual connection refused condition, but otherwise this step
    is unremarkable.
 
-   .. code::
+   .. code:: lisp
 
       ;; This is the entry point into this example
       (defun run-ex4-client (&key (host *host*) (port *port*))
@@ -149,8 +149,8 @@ conditions. Other changes will be explained as we meet them.
 
 The main functions of the multiplexer API are:
 
-.. code::
-   
+.. code:: lisp
+
    (make-instance 'iomux:event-base ....)
 
 Create an instance of the event-base, and associate some properties
@@ -160,38 +160,38 @@ Passed an:
 \:exit-when-empty - when no handlers are registered, event-dispatch
 will return.
 
-.. code::
-   
+.. code:: lisp
+
    (event-dispatch ...)
- 
-  
+
+
 By default, sit in the multiplexer loop forever and handle I/O
 requests. It is passed the event-base binding and in addition:
 \:once-only - run the ready handlers once then return.
 \:timeout - when there is no I/O for a certain amount of time return.
 
-.. code::
-   
+.. code:: lisp
+
    (set-io-handler ...)
 
 Associates a handler with a state to be called with a specific socket.
 Passed an:
 
 - event-base binding
-     
+
 - \:read or \:write or \:error keyword
-     
+
 - the handler closure
-     
-.. code::
-   
+
+.. code:: lisp
+
    (remove-fd-handlers ...)
-   
+
 Removes a handler for a specific state with a specific socket.
 Passed an:
 
 - event-base binding
-     
+
 - an fd
 
 - one or more of \:read t, \:write t, \:error t
@@ -204,7 +204,7 @@ Here is the example using this API.
    must be initialized and torn down as we'll see in the entry function to
    this example.
 
-   .. code::
+   .. code:: lisp
 
       ;; This will be an instance of the multiplexer.
       (defvar *ex5a-event-base*)
@@ -220,7 +220,7 @@ Here is the example using this API.
    condition. To prevent layers of condition handling code, we explicitly
    handle closing of the socket ourselves.
 
-   .. code::
+   .. code:: lisp
 
       (defun run-ex5a-client-helper (host port)
         ;; Create a internet TCP socket under IPV4
@@ -250,29 +250,29 @@ Here is the example using this API.
    the function set-io-handler. Here are what the arguments to that function
    are:
 
-   a. .. code::
+   a. .. code:: lisp
 
         *ex5a-event-base*
-              
+
       This is the instance of the multiplexer for which we are setting
       up the handler.
 
-   b. .. code::
+   b. .. code:: lisp
 
         (socket-os-fd socket)
-     
+
       This call returns the underlying operating system's file
       descriptor associated with the socket.
 
-   c. .. code::
-              
+   c. .. code:: lisp
+
         :read
 
       This keyword states that we'd like to call the handler when the
       socket is ready to read. There is also :write and :error.
 
-   d. .. code::
-        
+   d. .. code:: lisp
+
         (make-ex5a-str-cli-read socket (make-ex5a-client-disconnector socket))
 
       The make-ex5a-str-cli-read function returns a closure over the
@@ -283,8 +283,8 @@ Here is the example using this API.
       by the multiplexer. The disconnector function will be called by the
       returned reader function if the reader function thinks that it
       needs to close the socket to the server.
-        
-   .. code::
+
+   .. code:: lisp
 
       (unwind-protect
           (progn
@@ -330,7 +330,7 @@ Here is the example using this API.
    socket. \:abort t avoids that case. If the socket is already closed by a
    handler by the time we get here, closing it again hurts nothing.
 
-   .. code::
+   .. code:: lisp
 
       ;; Cleanup expression for uw-p.
       ;; Try to clean up if the client aborted badly and left the socket open.
@@ -372,7 +372,7 @@ Here is the example using this API.
    the only socket it was multiplexing for was closed--because we've told the
    multiplexer to do so when it was made!
 
-   .. code::
+   .. code:: lisp
 
       (defun make-ex5a-str-cli-write (socket disconnector)
         ;; When this next function gets called it is because the event dispatcher
@@ -402,7 +402,7 @@ Here is the example using this API.
    read from the server without blocking, if the read is large enough we will
    continue to block until read-line reads the all the data and the newline.
 
-   .. code::
+   .. code:: lisp
 
       (defun make-ex5a-str-cli-read (socket disconnector)
         ;; When this next function gets called it is because the event dispatcher
@@ -438,7 +438,7 @@ Here is the example using this API.
    automatically close the socket because WITH-OPEN-SOCKET may try to flush
    data on the socket, signaling another condition.
 
-   .. code::
+   .. code:: lisp
 
       (defun make-ex5a-client-disconnector (socket)
         ;; When this function is called, it can be told which callback to remove, if
@@ -471,7 +471,7 @@ Here is the example using this API.
    that is done, we call the helper, catching a common condition and waiting
    until we return.
 
-   .. code::
+   .. code:: lisp
 
       ;; This is the entry point for this example.
       (defun run-ex5a-client (&key (host *host*) (port *port*))
@@ -499,7 +499,7 @@ Here is the example using this API.
    method for the generic function CLOSE which accepts an event-base and
    performs the necessary work to shut it down.
 
-   .. code::
+   .. code:: lisp
 
       ;; Cleanup form for uw-p
       ;; ensure we clean up the event base regardless of how we left the client
@@ -548,7 +548,7 @@ We show this example as a difference to ex5aq-client.
    handler, which removes the last handler, and causes the EVENT-DISPATCH
    function to return, which ends the client computation.
 
-   .. code::
+   .. code:: lisp
 
       (defun make-ex5b-str-cli-write (socket disconnector)
         ;; When this next function gets called it is because the event dispatcher
