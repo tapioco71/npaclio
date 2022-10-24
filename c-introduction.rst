@@ -1,4 +1,4 @@
-.. comment: -*- mode:rst; coding:utf-8; electric-indent-mode:nil; tab-always-indent:t -*-
+.. comment: -*- mode: rst; coding: utf-8; electric-indent-mode: nil; tab-always-indent: t -*-
 
 
 Introduction
@@ -88,7 +88,7 @@ the client to \*host\* and \*port\*, get the time, and exit.
 
 First we'll start up a server:
 
-.. code:: lisp
+.. code::
 
    Linux black > sbcl
    This is SBCL 2.1.1.debian, an implementation of ANSI Common Lisp.
@@ -113,9 +113,10 @@ First we'll start up a server:
    T
    *
 
+
 Now we'll start up the client which connected to the above server:
 
-.. code:: lisp
+.. code::
 
    Linux black > sbcl
    This is SBCL 2.1.1.debian, an implementation of ANSI Common Lisp.

@@ -1,6 +1,6 @@
-.. comment: -*- mode:rst; coding:utf-8; electric-indent-mode:nil; tab-always-indent:t -*-
+.. comment: -*- mode: rst; coding: utf-8; electric-indent-mode: nil; tab-always-indent: t -*-
 
-   
+
 Overview of Examples
 ===============================================================================
 
@@ -33,4 +33,3 @@ recommended that the example sources be carefully read and understood in order
 to gain the most benefit from the tutorial.
 
 .. comment: end of file
-   
